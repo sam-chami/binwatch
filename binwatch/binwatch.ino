@@ -1,8 +1,6 @@
 #define BIT(n,i) (n>>i&1)
 
-#include <Wire.h>
 #include <Rtc_Pcf8563.h>
-#include "LowPower.h"
 
 const int btnPin = 13;
 bool btn = 0;
@@ -19,9 +17,9 @@ void setup()
 
   rtc.initClock();
   //day, weekday, month, century, year
-  rtc.setDate(10, 7, 7, 0, 22);
+  rtc.setDate(24, 3, 8, 0, 22);
   //hr, min, sec
-  rtc.setTime(1, 15, 40);
+  rtc.setTime(13, 55, 00);
 }
 
 
@@ -47,17 +45,26 @@ void writeMin_unit(int min_unit){
 
 void loop()
 {
-  for (int i = 2; i < 13; i++)
-  {
-      digitalWrite(i, 0);
+  for (int i = 2; i < 13; i++) {
+    digitalWrite(i, 0);
   }
-  LowPower.powerDown(SLEEP_4S, ADC_OFF, BOD_OFF); 
+  
+  sleepMode(SLEEP_IDLE);
+  sleep();
+//
+//  btn = digitalRead(btnPin);
+//  if(btn = HIGH) {
+//    noSleep();
+//    writeHours(rtc.getHour()%12);
+//    writeMin_ten(rtc.getMinute() / 10);
+//    writeMin_unit(rtc.getMinute()%10);
+//    delay(10000);
+//  }
   btn = digitalRead(btnPin);
   if(btn == HIGH){
-    writeHours(rtc.getHour());
+    writeHours(rtc.getHour()%12);
     writeMin_ten(rtc.getMinute() / 10);
     writeMin_unit(rtc.getMinute()%10);
-    LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-    LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF); 
+    delay(16000);
   }
 }
